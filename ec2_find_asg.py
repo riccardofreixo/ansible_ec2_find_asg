@@ -30,7 +30,7 @@ DOCUMENTATION = '''
 module: ec2_find_asg
 short_description: Finds AutoScalingGroups based on ec2 tags
 description:
-     - Finds AutoScalingGroups based on ec2 tags.
+     - Finds and retrieves properties about AutoScalingGroups based on ec2 tags.
 options:
   tags:
     description:
@@ -44,8 +44,8 @@ author: Riccardo Freixo
 
 EXAMPLES = '''
 # a playbook task line:
-- name: Find ASGs with tags foo and bar equals true
-  ec2_find_asg:
+- ec2_find_asg:
+    region: us-west-1
     tags:
       foo: true
       bar: true
@@ -107,24 +107,37 @@ def get_properties(autoscaling_group):
 
     return properties
 
-def list_asgs(connection):
-    """List all ASGs"""
-    print "%-20s %s" %  ("Name", "LC Name")
-    print "-"*80
-    groups = connection.get_all_groups()
-    for g in groups:
-        print "%-20s %s" % (g.name, g.launch_config_name)
+def find(connection, module):
+    """Find and get properties of ASGs with specified tags"""
+    search_tags = module.params.get('tags')
+
+    matching_as_groups = {}
+    matching_as_groups_list = []
+
+    as_groups = connection.get_all_groups()
+    for as_group in as_groups:
+        as_group_tags = dict((t.key, t.value) for t in as_group.tags)
+        tags_intersection = dict(set.intersection(*(set(d.iteritems()) for d in [as_group_tags, search_tags])))
+        if tags_intersection == search_tags:
+            matching_as_groups_list.append(get_properties(as_group))
+
+    matching_as_groups.update(
+        as_groups=matching_as_groups_list
+    )
+
+    return matching_as_groups
 
 def main():
     argument_spec = ec2_argument_spec()
     argument_spec.update(
         dict(
-            tags=dict(type='list', default=[]),
+            tags=dict(type='dict')
         ),
     )
 
     module = AnsibleModule(
-        argument_spec=argument_spec
+        argument_spec=argument_spec,
+        supports_check_mode=True
     )
 
     region, ec2_url, aws_connect_params = get_aws_connection_info(module)
@@ -136,6 +149,6 @@ def main():
         module.fail_json(msg=str(e))
     changed = create_changed = replace_changed = False
 
-    print list_asgs(connection)
+    module.exit_json( changed=False, **find(connection, module) )
 
 main()
