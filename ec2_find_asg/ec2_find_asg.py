@@ -28,18 +28,25 @@ THE SOFTWARE.
 DOCUMENTATION = '''
 ---
 module: ec2_find_asg
-short_description: Finds AutoScalingGroups based on ec2 tags
+version_added: "1.8"
+short_description: Find AutoScalingGroups based on ec2 tags.
 description:
-     - Finds and retrieves properties about AutoScalingGroups based on tags.
+    - Finds and retrieves properties about AutoScalingGroups based on tags.
+author: Riccardo Freixo
 options:
+  region:
+    description:
+      - The AWS region to use. If not specified then the value of the EC2_REGION environment variable, if any, is used.
+    required: false
+    aliases: ['aws_region', 'ec2_region']
   tags:
     description:
       - dictonary of key value tags to search for.
-      required: true
+    required: true
     default: null
     aliases: []
-requirements: [ "boto" ]
-author: Riccardo Freixo
+
+extends_documentation_fragment: aws
 '''
 
 EXAMPLES = '''
