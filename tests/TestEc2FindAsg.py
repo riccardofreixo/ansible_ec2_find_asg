@@ -100,5 +100,16 @@ class TestEc2FindAsg(unittest.TestCase):
                 msg='Assert get_properties returns correct random tags'
                 )
 
+    def test_match_and_get_properties(self):
+        matching_as_groups = match(
+                self.AS_GROUPS,
+                self.SEARCH_RANDOM_TAGS_DICT
+                )
+        self.assertDictEqual(
+                matching_as_groups['as_groups'][0]['tags'],
+                self.SEARCH_RANDOM_TAGS_DICT,
+                msg='Assert match returns correct random tags'
+                )
+
 if __name__ == '__main__':
     unittest.main()
