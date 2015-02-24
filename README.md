@@ -1,6 +1,6 @@
-# ansible-find-asg
+# ansible_ec2_find_asg
 
-[![Build Status](https://travis-ci.org/riccardofreixo/ansible-find-asg.svg?branch=master)](https://travis-ci.org/riccardofreixo/ansible-find-asg.svg)
+[![Build Status](https://api.travis-ci.org/riccardofreixo/ansible_ec2_find_asg.svg?branch=master)](https://travis-ci.org/riccardofreixo/ansible_ec2_find_asg)
 
 Simple module to find and retrive properties about EC2 AutoScalingGroups based on tags.
 
@@ -12,7 +12,7 @@ To use this module, you can either:
 * Use the --module-path command line option.
 * Place it in the directory ./library alongside your top level playbooks.
 
-For more information check out the official [Ansible documentation](docs.ansible.com/developing_modules.html "Developing Modules").
+For more information check out the official [Ansible documentation](http://docs.ansible.com/developing_modules.html "Developing Modules").
 
 ###Example
 
