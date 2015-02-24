@@ -194,8 +194,7 @@ def main():
         module.fail_json(msg=str(error))
 
     search_tags = module.params.get('tags')
-    find(connection, search_tags)
-    # module.exit_json(changed=False, **find(connection, search_tags))
+    module.exit_json(changed=False, **find(connection, search_tags))
 
 if __name__ == "__main__":
     main()
